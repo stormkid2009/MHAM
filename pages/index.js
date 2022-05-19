@@ -13,12 +13,17 @@ export default function Home() {
     if(!session){
       router.push('/accessDenied')
     }
-    router.push('/add')
+    router.push('/units/add')
+  }
+
+  const handleSearch =(e)=>{
+    e.preventDefault();
+    router.push('/units')
   }
   return (
-    <div className="w-full h-full">
+    
       <Layout >
-        <div className="flex flex-col items-center h-full my-4">
+        <div className="flex-grow flex flex-col items-center  py-4">
           <div className="flex-1">
             <h1 className="py-2 px-1 text-white bg-blue-500 rounded-lg">&& MHAM DASHBOARD &&</h1>
           </div>
@@ -30,10 +35,10 @@ export default function Home() {
           </div>
           <div className="flex justify-between bg-transparent">
             <button className={styles.btn} onClick={handleAddUnit}>Add New Unit</button>
-            <button className={styles.btn}>Search Exisiting Units</button>
+            <button className={styles.btn} onClick={handleSearch}>Search Exisiting Units</button>
           </div>
         </div>
       </Layout>
-    </div>
+    
   );
 }

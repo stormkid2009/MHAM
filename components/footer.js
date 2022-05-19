@@ -3,8 +3,8 @@ import  'tailwindcss/tailwind.css';
 
 function Footer() {
   return (
-    <div className="flex flex-col justify-center bg-blue-700  h-24 mb-0 text-center text-white
-    py-2">
+    <div className="flex  justify-around bg-blue-700    text-center text-white
+    py-4  ">
       <div>
       
       <p><strong>copyright©MHAM 2022</strong></p>
