@@ -1,58 +1,62 @@
 import { useState } from "react";
+import { connectToDatabase } from "../../lib/mongodb";
 import Image from "next/image";
 import Layout from "../../components/layout";
 import Link from "next/link";
 
-function List() {
+
+function List({ units }) {
   //our filtered units state which will obtain the search result
   const [filtered, setFiltered] = useState([]);
-  //our search handler which will hit our api for data depends on sent query
-  const search = async (event) => {
-    event.preventDefault();
-    const data = {
-      status: event.target.status.value,
-      category: event.target.category.value,
-    };
-    const JSONdata = JSON.stringify(data);
-    const response = await fetch("/api/units/search", {
-      // Body of the request is the JSON data we created above.
-      body: JSONdata,
+  //first param to filtering our units
+  const [status, setStatus] = useState("");
+  //second param to filtering our units
+  const [category, setCategory] = useState("");
 
-      // Tell the server we're sending JSON.
-      headers: {
-        "Content-Type": "application/json",
-      },
-      // The method is POST because we are sending data.
-      method: "POST",
-    });
-    const result = await response.json();
-    setFiltered(result);
+ 
+
+  const statusHandler = (e) => {
+    e.preventDefault();
+    setStatus(e.target.value);
+  };
+
+  const categoryHandler = (e) => {
+    e.preventDefault();
+    setCategory(e.target.value);
+  };
+
+  const search = (e) => {
+    e.preventDefault();
+    let list = units.filter(
+      (unit) =>  unit.status === status && unit.category === category
+    );
+    setFiltered(list);
+    
   };
 
   return (
     <Layout>
       <div className="flex-grow h-full bg-blue-500">
-        <form onSubmit={search}>
-          <div className="flex justify-between  h-40">
-            <div className="p-2 ">
-              <label className="pr-2 text-white">
-                <span>Status</span>
-              </label>
-              <select id="status" name="status" required
-              className="text-white bg-slate-500">
-                <option value=""> .........</option>
-                <option value="Rent">Rent</option>
-                <option value="Sale">Sale</option>
-              </select>
-            </div>
-            <div className="p-2">
-              <label className="pr-2 text-white">
-                <span>Category</span>
-              </label>
-              <select id="category" name="category" required
-              className="text-white bg-slate-500">
-                <option value="">..........</option>
-                <option value="Apartment" className="text-base">
+        <div className="flex justify-between  h-25">
+          <div className="p-2 ">
+            <select
+              name="status"
+              onChange={statusHandler}
+              required
+            >
+              <option value=""> Status</option>
+              <option value="Rent">Rent</option>
+              <option value="Sale">Sale</option>
+            </select>
+          </div>
+          <div className="p-2">
+            <select
+              name="category"
+              onChange={categoryHandler}
+              required
+            >
+              <option value="">Category</option>
+              <option value="Apartment" className="text-base">
                   Apartment
                 </option>
                 <option value="Chalet" className="text-base">
@@ -103,18 +107,14 @@ function List() {
                 <option value="Warehouse" className="text-base">
                   Warehouse
                 </option>
-              </select>
-            </div>
-            <div>
-              <button
-                type="submit"
-                className=" border-2 rounded-lg border-white text-white p-2 hover:bg-slate-500"
-              >
-                search
-              </button>
-            </div>
+            </select>
           </div>
-        </form>
+          <div className="bg-blue-700 border-2 rounded-lg border-white text-white p-2">
+            <button onClick={search} className="">
+              search
+            </button>
+          </div>
+        </div>
         <div className="flex-1">
           <h1 className="text-center bg-slate-500 p-2 text-white text-xl">
             Search result : {filtered.length}
@@ -175,6 +175,22 @@ function List() {
       </div>
     </Layout>
   );
+}
+
+export async function getStaticProps() {
+  //connecting to our database
+  let { db } = await connectToDatabase();
+  //get all units from database collection 'units'
+  let data = await db.collection("units").find({}).toArray();
+  //avoiding problems with parsing and stringify our data
+  const units = JSON.parse(JSON.stringify(data));
+
+  return {
+    props: {
+      units,
+    },
+    revalidate: 10,
+  };
 }
 
 export default List;

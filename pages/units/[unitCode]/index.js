@@ -29,7 +29,7 @@ export async function getStaticProps(context){
         props:{
             unit,
         },
-        revalidate: 60,
+        revalidate: 10,
     }
 }
 

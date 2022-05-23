@@ -2,8 +2,14 @@
 const { connectToDatabase } = require('../../../lib/mongodb');
 const ObjectId = require('mongodb').ObjectId;
 //import {connectToDatabase} from '../../../lib/mongodb'
+import { getSession } from "next-auth/react"
 
-export default function handler(req, res) {
+const handler = async(req, res)=> {
+    //securing api route
+    const session = await getSession({ req });
+    if(!session){
+        res.status(401).json({msg:"no permission to access this route!"})
+    }
     // Get data submitted in request's body.
     const {status,category,owner,ownerPhone,type,price,area,location,address,media,zone,rooms,description} = req.body
   
@@ -37,3 +43,6 @@ export default function handler(req, res) {
         });
     }
 }
+
+
+export default handler;
