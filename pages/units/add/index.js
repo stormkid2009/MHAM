@@ -3,13 +3,7 @@ import Layout from "../../../components/layout";
 import { useSession, getSession } from "next-auth/react";
 
 
-/*export async function getServerSideProps(context) {
-  return {
-    props: {
-      session: await getSession(context),
-    },
-  };
-}*/
+
 
 export default function AddUnitForm() {
   //securing page client side
@@ -27,7 +21,15 @@ export default function AddUnitForm() {
   const handleSubmit = async (event) => {
     // Stop the form from submitting and refreshing the page.
     event.preventDefault();
-
+    const pictures = [
+      event.target.img1.value,
+      event.target.img2.value,
+      event.target.img3.value,
+      event.target.img4.value
+    ];
+    let images = pictures.map((image)=>{
+      return image.replace(/open/g, "uc");
+    });
     // Get data from the form.
     const data = {
       author: session.user.email,
@@ -44,12 +46,12 @@ export default function AddUnitForm() {
       owner: event.target.owner.value,
       ownerPhone: event.target.ownerPhone.value,
       description: event.target.description.value,
-      media: event.target.media.value.replace(/open/g, "uc"),
+      media: images,
       createDate: new Date(),
     };
-
+    
     const JSONdata = JSON.stringify(data);
-    console.log(JSONdata);
+    
     // Send the form data to our API and get a response.
     const response = await fetch("/api/units/add", {
       // Body of the request is the JSON data we created above.
@@ -185,7 +187,7 @@ export default function AddUnitForm() {
                 required
                 className="block p-2 w-2/3 text-black bg-gray-50 rounded-lg border border-gray-300 sm:text-xs focus:ring-blue-500 focus:border-blue-500"
               />
-              <span>LE</span>
+              <span>EGP</span>
             </div>
             <div className="m-2 flex-1 flex justify-left">
               <label
@@ -401,16 +403,61 @@ export default function AddUnitForm() {
           </div>
           <div className="m-2 flex justify-left">
             <label
-              htmlFor="media"
+              htmlFor="img1"
               className="block m-2 text-lg font-medium text-gray-900 "
             >
-              Media
+              Image
             </label>
             <input
               type="text"
-              id="media"
-              name="media"
+              id="img1"
+              name="img1"
               required
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            />
+          </div>
+          <div className="m-2 flex justify-left">
+            <label
+              htmlFor="img2"
+              className="block m-2 text-lg font-medium text-gray-900 "
+            >
+              Image
+            </label>
+            <input
+              type="text"
+              id="img2"
+              name="img2"
+              
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            />
+          </div>
+          <div className="m-2 flex justify-left">
+            <label
+              htmlFor="img3"
+              className="block m-2 text-lg font-medium text-gray-900 "
+            >
+              Image
+            </label>
+            <input
+              type="text"
+              id="img3"
+              name="img3"
+              
+              className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+            />
+          </div>
+          <div className="m-2 flex justify-left">
+            <label
+              htmlFor="img4"
+              className="block m-2 text-lg font-medium text-gray-900 "
+            >
+              Image
+            </label>
+            <input
+              type="text"
+              id="img4"
+              name="img4"
+              
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
             />
           </div>

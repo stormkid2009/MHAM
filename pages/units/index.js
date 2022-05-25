@@ -128,7 +128,7 @@ function List() {
                 >
                   <div className="flex-1">
                     <Image
-                      src={unit.media}
+                      src={unit.media[0]}
                       height={200}
                       width={200}
                       alt="image"
