@@ -1,5 +1,6 @@
 import React from 'react';
-import {useRouter} from 'next/router'
+import {useRouter} from 'next/router';
+import Layout from '../../../components/layout';
 
 function DeleteUnit() {
     const router = useRouter();
@@ -22,19 +23,25 @@ function DeleteUnit() {
       router.push("/");
     }
   return (
-    <div>
-        <form onSubmit={submitHandler}>
+    <Layout>
+
+    <div className='flex justify-center '>
+        <form onSubmit={submitHandler} className="p-2 border-2 border-sky-400 rounded-md">
             <input 
             type="text"
             name="unitCode"
             id="unitCode"
+            placeholder='type valid unit code'
             required
+            className='p-2 m-2'
             />
             <button
             type='submit'
+            className='p-2 m-2 text-white bg-slate-500'
             >Delete</button>
         </form>
     </div>
+    </Layout>
   )
 }
 
